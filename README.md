@@ -80,11 +80,11 @@ You will also need a trained **MACE model file** (e.g. `mace-mpa-0-medium.model`
 - Enforce **bulk‑only swaps** (exclude surface atoms via z‑coordinate filtering)
 - Accept or reject swaps using:
 
-\[ P = \min\left(1, e^{-\beta \Delta E} \right) \]
+$\[ P = \min\left(1, e^{-\beta \Delta E} \right) \]$
 
 where:
 
-\[ \beta = \frac{1}{k_B T} \]
+$\[ \beta = \frac{1}{k_B T} \]$
 
 ---
 
