@@ -2,29 +2,30 @@ import sys
 from itertools import combinations
 
 from mclib import MDMC
-from fairchem.core import FAIRChemCalculator, pretrained_mlip
+from mace.calculators import MACECalculator
+calc = MACECalculator(model_path='mace-mpa-0-medium.model', device='cuda')
 
 """
 Usage: python3 montecarlo.py <int: nsteps> <bool: sf>
 """
 
+nsteps = int(sys.argv[1])
 # Specify simulation constants
 try:
-    temp = int(sys.argv[1])
+    temp = int(sys.argv[2])
 except:
     temp = 300
+try:
+    disl = sys.argv[3]
+except:
+    disl = True
 
 seed = 123456
 
-# Load MLIP
-predictor = pretrained_mlip.get_predict_unit("uma-s-1p1", inference_settings="turbo", device="cuda", workers=4)
-calc = FAIRChemCalculator(predictor, task_name="omat")
+# Load potential
 
-species = ['Ni','Co','Cr','Re','Ti','Al','W','Nb','C']
+species = ['Ni','Co','Cr','Re','Ti','Al','W','Nb']
 swaps = list(combinations(species, 2))
-
-nsteps = int(sys.argv[2])
-disl = sys.argv[3]
 
 logfile = f"mc-sf-{temp}.txt"
 
@@ -33,11 +34,10 @@ mc = MDMC(calc=calc,
         temperature=temp, 
         swaps=swaps, 
         seed=seed, 
-        logfile=logfile, 
-        young_modulus=188.2)
+        logfile=logfile)
 
 if disl:
-    mc.create_sf(latparam=3.57)
+    mc.create_sf(latparam=3.57, vacuum=10)
 
-mc.equilibriate(20000)
+mc.equilibriate(100)
 mc.run(nsteps)

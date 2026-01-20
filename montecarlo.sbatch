@@ -1,19 +1,16 @@
 #!/bin/bash
 #SBATCH --partition=granite-gpu
-#SBATCH --qos=granite-gpu-freecycle
+#SBATCH --qos=granite-gpu
+#SBATCH --gres=gpu:l40s:1
 #SBATCH --account=prameela
-#SBATCH --gres=gpu:l40s:4
+#SBATCH -o mc.out
+#SBATCH -e mc.err
+#SBATCH --time=24:00:00
+#SBATCH --mem=50G
 
-#SBATCH -N 1
-#SBATCH --time=72:00:00
-#SBATCH --mem=30G
-#SBATCH --cpus-per-task=6
-#SBATCH --output=mc.out
-#SBATCH --error=mc.err
-
-#Usage: sbatch montecarlo.sbatch <temp> <nsteps> <disl: True/False>
-temp=$1
-steps=$2
+#Usage: sbatch montecarlo.sbatch <nsteps> <temp> <disl: True/False>
+steps=$1
+temp=$2
 disl=$3
 
 module load miniforge3
